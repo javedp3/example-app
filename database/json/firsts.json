@@ -1,0 +1,38 @@
+[{
+        "name": "jp",
+        "email": "jp@gmail.com",
+        "age": "20",
+        "address": "aur"
+
+    },
+    {
+
+        "name": "srk",
+        "email": "srk@gmail.com",
+        "age": "25",
+        "address": "pune"
+    },
+    {
+
+        "name": "pk",
+        "email": "pk@gmail.com",
+        "age": "22",
+        "address": "nagar"
+
+    },
+    {
+
+        "name": "pkk",
+        "email": "pkk@gmail.com",
+        "age": "28",
+        "address": "khultabad"
+    },
+    {
+
+        "name": "pkkk",
+        "email": "pkkk@gmail.com",
+        "age": "21",
+        "address": "aurangabad"
+    }
+
+]
