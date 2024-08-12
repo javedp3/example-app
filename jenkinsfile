@@ -1,24 +1,31 @@
 pipeline {
     agent any
-
     stages {
-        stage('Build') {
+        stage("Composer Install") {
             steps {
-                checkout scm
-                script {
-                    sh 'composer install'
-                    sh 'php artisan migrate'
-                }
+               script {
+                    try {
+                        sh 'cd /var/www/html'
+                        sh 'rm -rf vendor/'
+                        sh 'composer install'
+                    } catch (Exception e) {
+                        echo 'Some file permissions not there.'
+                    }
+               }
             }
         }
-
-        stage('Deploy') {
+        stage("Clean Cache") {
             steps {
-                script {
-                    sh 'rsync -avz --exclude=".git" /path/to/your-laravel-repo/ user@your-ec2-ip:/path/to/remote/dir'
-                    sh 'ssh user@your-ec2-ip "cd /path/to/remote/dir && php artisan config:cache"'
-                }
+               sh 'php artisan cache:clear'
+               sh 'php artisan config:clear'
+               sh 'php artisan config:cache'
+            }
+        }
+        stage("Run Tests") {
+            steps {
+                sh 'php artisan test'
             }
         }
     }
+    
 }
