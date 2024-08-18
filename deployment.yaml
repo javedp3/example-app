@@ -1,34 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-laravel-app
+  name: laravel-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: my-laravel-app
+      app: laravel-app
   template:
     metadata:
       labels:
-        app: my-laravel-app
+        app: laravel-app
     spec:
       containers:
-      - name: my-laravel-app
-        image: <your-dockerhub-username>/my-laravel-app:latest
-        ports:
-        - containerPort: 9000
-
+        - name: app
+          image: your-docker-registry/laravel-app:latest
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: app-storage
+              mountPath: /var/www/storage
+      volumes:
+        - name: app-storage
+          persistentVolumeClaim:
+            claimName: app-storage-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-laravel-app-service
+  name: laravel-service
 spec:
   selector:
-    app: my-laravel-app
+    app: laravel-app
   ports:
     - protocol: TCP
       port: 80
       targetPort: 9000
   type: LoadBalancer
-

@@ -1,28 +1,28 @@
-FROM php:8.0-fpm
+# Use the official PHP image with Composer
+FROM php:8.1-fpm
 
-# Install dependencies
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev unzip git
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd
-RUN docker-php-ext-install zip pdo pdo_mysql
+# Set working directory
+WORKDIR /var/www
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev libzip-dev git unzip
+
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install zip
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Copy project files
+# Copy application code
 COPY . .
 
-# Install PHP dependencies
-RUN composer install
+# Install application dependencies
+RUN composer install --no-dev --optimize-autoloader
 
 # Expose port
 EXPOSE 9000
 
-# Start PHP-FPM
+# Start PHP-FPM server
 CMD ["php-fpm"]
-
-
-
